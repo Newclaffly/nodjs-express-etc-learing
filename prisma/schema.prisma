@@ -17,8 +17,17 @@ model Job {
   salary   String
 }
 
+model Car{
+  id Int @default(autoincrement()) @id
+  model String
+  year Int
+  user User @relation(fields: [userId],references: [id])
+  userId Int
+}
+
 model User {
   id       Int    @id @default(autoincrement())
   username String @unique
   password String
+  cars Car[]
 }
