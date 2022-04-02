@@ -80,27 +80,6 @@ app.delete("/:id", async (req: Request, res: Response) => {
     res.json(deletedUser)
 })
 
-// app.get('/', (req: Request, res: Response) => {
-//     res.send('Express + TypeScript Server')
-// })
-
-// app.get('/about', (req: Request, res: Response) => {
-//     res.send('Route about called')
-// })
-
-// app.post('/about', (req: Request, res: Response) => {
-//     console.log(req.body)
-
-//     const temp: {
-//         username: string,
-//         array: number[],
-//         persons?: {
-//             age: string,
-//         }[]
-//     } = req.body
-//     res.send((temp.persons?.[0].age) ?? "Not found")
-
-// })
 
 
 
