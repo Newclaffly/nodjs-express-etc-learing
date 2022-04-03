@@ -16,10 +16,16 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const client_1 = require("@prisma/client");
+const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT;
+const allowedOrigins = ['http://localhost:3006'];
+const options = {
+    origin: allowedOrigins
+};
 app.use(body_parser_1.default.json());
+app.use((0, cors_1.default)(options));
 // app.use(express.json())
 const prisma = new client_1.PrismaClient();
 app.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -46,7 +52,11 @@ app.post("/createManyCars", (req, res) => __awaiter(void 0, void 0, void 0, func
     });
     res.json(cars);
 }));
-app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/getallCars", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const cars = yield prisma.car.findMany();
+    res.json(cars);
+}));
+app.get("/getCar", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield prisma.user.findMany({
         include: { cars: true },
     });
@@ -83,23 +93,6 @@ app.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     });
     res.json(deletedUser);
 }));
-// app.get('/', (req: Request, res: Response) => {
-//     res.send('Express + TypeScript Server')
-// })
-// app.get('/about', (req: Request, res: Response) => {
-//     res.send('Route about called')
-// })
-// app.post('/about', (req: Request, res: Response) => {
-//     console.log(req.body)
-//     const temp: {
-//         username: string,
-//         array: number[],
-//         persons?: {
-//             age: string,
-//         }[]
-//     } = req.body
-//     res.send((temp.persons?.[0].age) ?? "Not found")
-// })
 app.listen(port, () => {
     console.log(`[server] is running at https://localhost:${port}`);
 });
