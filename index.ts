@@ -2,12 +2,22 @@ import express, { Express, Request, Response } from 'express'
 import dotenv from 'dotenv'
 import bodypaser from 'body-parser'
 import { PrismaClient } from "@prisma/client"
+import cors from 'cors';
+
 dotenv.config()
 
 const app: Express = express()
 const port = process.env.PORT
 
+const allowedOrigins = ['http://localhost:3006'];
+
+const options: cors.CorsOptions = {
+  origin: allowedOrigins
+};
+
 app.use(bodypaser.json())
+app.use(cors(options));
+
 // app.use(express.json())
 const prisma = new PrismaClient()
 
@@ -38,12 +48,18 @@ app.post("/createManyCars", async (req: Request, res: Response) => {
     res.json(cars)
 })
 
-app.get("/", async (req: Request, res: Response) => {
+app.get("/getallCars", async (req: Request, res: Response) => {
+    const cars = await prisma.car.findMany()
+    res.json(cars)
+})
+
+app.get("/getCar", async (req: Request, res: Response) => {
     const users = await prisma.user.findMany({
         include:{cars:true},
     })
     res.json(users)
 })
+
 
 
 app.get("/byId/:id", async (req: Request, res: Response) => {
