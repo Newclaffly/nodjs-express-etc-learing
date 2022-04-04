@@ -26,8 +26,48 @@ const options = {
 };
 app.use(body_parser_1.default.json());
 app.use((0, cors_1.default)(options));
-// app.use(express.json())
 const prisma = new client_1.PrismaClient();
+//Get all jonal
+app.get("/getallJonal", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const jonalList = yield prisma.content.findMany();
+    res.json(jonalList);
+}));
+//Create jonal
+app.post("/createJonal", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { title, url_image } = req.body;
+    const jonal = yield prisma.content.create({
+        data: {
+            title: title,
+            url_image: url_image
+        }
+    });
+    res.json(jonal);
+}));
+//Update jonal
+app.put("/updateJonal", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, title, url_image } = req.body;
+    const updateJonal = yield prisma.content.update({
+        where: {
+            id: id
+        },
+        data: {
+            title: title,
+            url_image: url_image
+        }
+    });
+    res.json(updateJonal);
+}));
+//Delete jonal
+app.delete("/deleteJonal/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const deleteJonal = yield prisma.content.delete({
+        where: {
+            id: id
+        }
+    });
+    res.json(deleteJonal);
+}));
+// *************
 app.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.body;
     const user = yield prisma.user.create({
@@ -53,8 +93,8 @@ app.post("/createManyCars", (req, res) => __awaiter(void 0, void 0, void 0, func
     res.json(cars);
 }));
 app.get("/getallCars", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const cars = yield prisma.car.findMany();
-    res.json(cars);
+    const cars_all = yield prisma.car.findMany();
+    res.json(cars_all);
 }));
 app.get("/getCar", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield prisma.user.findMany({
@@ -64,11 +104,16 @@ app.get("/getCar", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 }));
 app.get("/byId/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
+    // const users = await prisma.$queryRaw('SELECT *FROM')
     const users = yield prisma.user.findUnique({
         where: {
             id: Number(id),
+        },
+        select: {
+            id: true
         }
     });
+    const usser1 = users === null || users === void 0 ? void 0 : users.id;
     res.json(users);
 }));
 app.put("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
