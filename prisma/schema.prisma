@@ -31,3 +31,9 @@ model User {
   password String
   cars Car[]
 }
+
+model Content {
+  id String @id @default(uuid())
+  title String
+  url_image String
+}
